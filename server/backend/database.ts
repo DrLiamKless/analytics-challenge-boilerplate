@@ -21,6 +21,7 @@ import {
   countBy,
   groupBy,
 } from "lodash/fp";
+import { createDateString } from './event-routes';
 import { isWithinInterval } from "date-fns";
 import low from "lowdb";
 import FileSync from "lowdb/adapters/FileSync";
@@ -69,6 +70,7 @@ import {
   isCommentNotification,
 } from "../../client/src/utils/transactionUtils";
 import { DbSchema } from "../../client/src/models/db-schema";
+import { query } from "express-validator";
 
 
 export type TDatabase = {
@@ -175,6 +177,87 @@ export const removeUserFromResults = (userId: User["id"], results: User[]) =>
   remove({ id: userId }, results);
 
 // convenience methods
+
+// Events:
+export const getAllEvents = () => getAllForEntity("events");
+
+export const getEventsFilteredByQuery = (query: object) => getAllByObj("events", query)
+
+export const getEventBy = (key: string, value: any) => getBy(EVENT_TABLE, key, value);
+
+export const getEventsBy = (key: string, value: any) => getAllBy(EVENT_TABLE, key, value);
+
+export const getEventId = (Event: Event): string => Event._id;
+
+export const getEventById = (id: string) => getEventBy("_id", id);
+
+export const sortEventsByDate = (events: Event[], order?:string) => events.sort((eventA, eventB) => {
+  if(order && order === "DESC") {
+    return eventB.date - eventA.date;
+  } else {
+    return eventA.date - eventB.date
+  }
+})
+
+export const getEventsByDateLimitGroupesByOs = (bottomLimit:number, topLimit:number) =>
+  db.get("events").filter((event:Event) => 
+    event.date > bottomLimit && event.date < topLimit).groupBy((event:Event) => {
+      return event.os}).value();
+
+export const getEventsByDateLimitGroupesByUrl = (bottomLimit:number, topLimit:number) =>
+db.get("events").filter((event:Event) => 
+  event.date > bottomLimit && event.date < topLimit).groupBy((event:Event) => {
+    return event.url}).value();
+
+export const getEventsByDateLimitGroupedByDate = (bottomLimit:number, topLimit:number) => 
+  db.get("events").filter((event:Event) => 
+    event.date > bottomLimit && event.date < topLimit).groupBy((event:Event) => {
+      return createDateString(event.date)}).value();
+
+export const getGroupdEventsByDateLimitForApi = (bottomLimit:number, topLimit:number) => {
+  const groupedEvents = getEventsGroupedByDay(bottomLimit, topLimit);
+  return Object.keys(groupedEvents).map((day:string) => {
+    return countBy((event: Event) => {
+      return new Date(event.date).toLocaleString().split(', ')[0];
+    }, uniqBy("session_id", groupedEvents[day]))
+  })
+}
+
+export const getGroupdEventsByOsByDateLimit = (bottomLimit:number, topLimit:number) => {
+  const groupedEvents = getEventsByDateLimitGroupesByOs(bottomLimit, topLimit);
+  return Object.keys(groupedEvents).map((os:string) => {
+    return countBy((event: Event) => {
+      return event.os
+    }, uniqBy("_id", groupedEvents[os]))
+  })
+}
+
+export const getGroupedEventsByUrlByDateLimit = (bottomLimit:number, topLimit:number) => {
+  const groupedEvents = getEventsByDateLimitGroupesByUrl(bottomLimit, topLimit);
+  return Object.keys(groupedEvents).map((url:string) => {
+    return countBy((event: Event) => {
+      return event.url
+    }, uniqBy("session_id", groupedEvents[url]))
+  })
+}
+
+export const getEventsGroupedByDay = (bottomLimit:number, topLimit:number) => {
+  const result = db.get("events").filter((event:Event) => event.date > bottomLimit && event.date < topLimit)
+  .groupBy((event:Event) => {
+    const date = new Date(event.date);
+    return `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`
+  });
+  
+  return result.value()
+}
+
+export const getSpecificEventsByDateLimit = (bottomLimit:number, topLimit:number, key:string, value:any) => 
+  db.get("events").filter((event:Event) => event.date > bottomLimit && event.date < topLimit)
+  .filter({ [`${key}`]: value }).value();
+
+export const saveEvent = (event: Event) => {
+    db.get(EVENT_TABLE).push(event).write();
+  };
 
 // User
 export const getUserBy = (key: string, value: any) => getBy(USER_TABLE, key, value);
