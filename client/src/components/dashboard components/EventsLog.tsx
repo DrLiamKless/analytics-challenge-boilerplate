@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback, MutableRefObject } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Event } from '../../models/event'
 import { EventLogWrapper, FormWrapper } from "components/styled components/cohort.styles";
@@ -61,7 +61,26 @@ const EventsLog: React.FC<{}> = ({}) => {
     const [allEvents, setAllEvents] = useState<{events:Event[], more:boolean}>();
     const { register, handleSubmit, watch, errors, control } = useForm();
     const [filters, setFilters] = useState<Filter>();
-    const [offset, setOffset] = useState<number>(10)
+    // const [offset, setOffset] = useState<number>(10);
+    const [pageNumber, setPageNumber] = useState<number>(1);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [hasMore, setHasMore] = useState<boolean>(true);
+
+
+    const observer = useRef<any>();
+    const lastEventAccordionRef = useCallback((node:HTMLElement) => {
+
+      if(loading) return
+      if(observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver(entries => {
+        if(entries[0].isIntersecting && hasMore) {
+          setPageNumber(prevPageNumber => prevPageNumber+1)
+          setLoading(true);
+        }
+      })
+      if(node) observer.current.observe(node);
+    },[loading, hasMore])
+
 
     const onSubmit = (data:Filter) => {
       setFilters(data);
@@ -69,17 +88,34 @@ const EventsLog: React.FC<{}> = ({}) => {
 
     useEffect( () => {
      const query:string = adjustQuery(filters);
-      fetchSessions(query, offset);
-    }, [filters, offset])
+      fetchSessions(query);
+    }, [pageNumber])
 
-    const fetchSessions: (query:string, offset:number) => Promise<void> = async (query) => {
+    useEffect(() => {
+      const query:string = adjustQuery(filters);
+      setPageNumber(1);
+      fetchSessions(query); 
+    }, [filters])
+
+    const fetchSessions: (query:string) => Promise<void> = async (query) => {
         const { data } = await axios({
           method: "get",
-          url: `http://localhost:3001/events/all-filtered?offset=${offset}&${query}`,
+          url: `http://localhost:3001/events/chart/all-filtered/${pageNumber}?${query}`,
         });
 
-        const events = data;
-        setAllEvents(events);
+        const events:{events:Event[], more:boolean} = data;
+        setAllEvents(prevEvents => {
+          if(prevEvents && pageNumber !== 1) {
+            const newEvents:{events:Event[], more:boolean} = prevEvents 
+            newEvents.events.push(...events.events);
+            console.log(newEvents);
+            return newEvents
+          } else {
+            return events
+          }
+        });
+          setLoading(false);
+          setHasMore(events.more);
     };
 
     const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
@@ -176,8 +212,10 @@ const EventsLog: React.FC<{}> = ({}) => {
           </FormWrapper>
         </form>
           <div className={classes.root}>
-            { allEvents.events.map((event:Event,i) => (
-              <Accordion expanded={expanded === `panel${i+1}`} onChange={handleChange(`panel${i+1}`)}>
+            { allEvents.events.map((event:Event,i) => {
+              if (allEvents.events.length === i + 1) {
+                return (  
+                  <Accordion ref={lastEventAccordionRef} expanded={expanded === `panel${i+1}`} onChange={handleChange(`panel${i+1}`)}>
                 <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls={`panel${i+1}bh-content`}
@@ -212,8 +250,48 @@ const EventsLog: React.FC<{}> = ({}) => {
                         </Table>
                     </TableContainer>
                 </AccordionDetails>
-            </Accordion>
-            ))}
+            </Accordion>)
+              } else {
+                return (
+                  <Accordion expanded={expanded === `panel${i+1}`} onChange={handleChange(`panel${i+1}`)}>
+                  <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel${i+1}bh-content`}
+                  id={`panel${i+1}bh-header`}
+                  >
+                  <Typography className={classes.heading}>{event.name}</Typography>
+                  <Typography className={classes.secondaryHeading}>By User-Id {event.distinct_user_id}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                      <TableContainer component={Paper}>
+                          <Table className={classes.table} size="small" aria-label="a dense table">
+                              <TableHead>
+                              <TableRow>
+                                  <TableCell align="center">Date</TableCell>
+                                  <TableCell align="center">os</TableCell>
+                                  <TableCell align="center">browser</TableCell>
+                                  <TableCell align="center">url</TableCell>
+                                  <TableCell align="center">session id</TableCell>
+                              </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                  <TableRow>
+                                  <TableCell component="th" scope="row">
+                                      {new Date(event.date).toLocaleDateString()}
+                                  </TableCell>
+                                  <TableCell align="center">{event.os}</TableCell>
+                                  <TableCell align="center">{event.browser}</TableCell>
+                                  <TableCell align="center">{event.url}</TableCell>
+                                  <TableCell align="center">{event.session_id}</TableCell>
+                                  </TableRow>
+                              </TableBody>
+                          </Table>
+                      </TableContainer>
+                  </AccordionDetails>
+              </Accordion>
+                )
+              }
+          })}
         </div>
       </div>
   : <h1>Loader</h1>

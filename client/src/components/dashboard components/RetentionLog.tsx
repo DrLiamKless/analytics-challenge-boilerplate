@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef, CSSProperties } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Event, weeklyRetentionObject } from '../../models/event'
-import { ChartWrapper, TableEmptySquare, TableElement } from "components/styled components/cohort.styles";
+import { ChartWrapper, TableEmptySquare, TableElement,DatePickerWrapper } from "components/styled components/cohort.styles";
+import { TextField } from "@material-ui/core";
+
 import axios from 'axios'
 import { 
     Accordion, 
@@ -50,29 +52,51 @@ const now = Date.now();
 const monthAgo = now - 1000*60*60*24*31
 
 const RetentionLog: React.FC<{}> = ({}) => {
-    const classes = useStyles();
-    const [allRetentions, setAllRetentions] = useState<weeklyRetentionObject[]>();
-    const [dayZero, setdayZero] = useState<number>(monthAgo);
+  const classes = useStyles();
+  const [allRetentions, setAllRetentions] = useState<weeklyRetentionObject[]>();
+  const [dayZero, setDayZero] = useState<number>(monthAgo);
 
-    useEffect( () => {
-      fetchRetentions(dayZero);
-    }, [dayZero])
+  useEffect( () => {
+    fetchRetentions(dayZero);
+  }, [dayZero])
 
-    const fetchRetentions: (dayZero:number) => Promise<void> = async (query) => {
-        const { data } = await axios({
-          method: "get",
-          url: `http://localhost:3001/events/retention?dayZero=${dayZero}`,
-        });
+  const fetchRetentions: (dayZero:number) => Promise<void> = async (query) => {
+      const { data } = await axios({
+        method: "get",
+        url: `http://localhost:3001/events/retention?dayZero=${dayZero}`,
+      });
 
-        const retentions = data;
-        console.log(data);
-        setAllRetentions(retentions);
-    };
+      const retentions = data;
+      console.log(data);
+      setAllRetentions(retentions);
+  };
+
+  const getDateDifferences = (dateToStart:string):number => {
+
+    if (new Date(dateToStart).getTime() < Date.now()) {
+      return  new Date(dateToStart).getTime()
+    } else return 0
+  }
+
+  const onEventChange = (dateToStart:string) => {
+    setDayZero(getDateDifferences(dateToStart));
+  }
       
   return (
     <ChartWrapper>
       { allRetentions ?
           <div>
+          <DatePickerWrapper className="form">
+          <TextField
+            id="dayZero"
+            label="start date"
+            type="date"
+            onChange={(e)=>{onEventChange(e.target.value)}}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          </DatePickerWrapper>
             <TableElement>
               <tr>
                 <th  style={{backgroundColor:"#7777", width: "200px"}}></th>

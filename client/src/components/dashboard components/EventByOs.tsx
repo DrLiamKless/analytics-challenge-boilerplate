@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Event } from '../../models/event'
-import { ChartWrapper, DatePickerWrapper } from "components/styled components/cohort.styles";
+import { ChartWrapper, DatePickerWrapper, PieChartWrapper } from "components/styled components/cohort.styles";
 import axios from 'axios'
-import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend, Pie ,PieChart, Cell } from 'recharts'
+import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend, Pie ,PieChart, Cell, ResponsiveContainer } from 'recharts'
 import { TextField } from "@material-ui/core";
 
 const month = 1000*60*60*24*31
@@ -13,16 +13,16 @@ const monthAgo = now - 1000*60*60*24*31
 
 const EventsByOs: React.FC<{}> = ({}) => {
     const [allOsCounts, setAllOsCounts] = useState<object[]>();
-    const [timeStamp, settimeStamp] = useState<number>(monthAgo);
+    const [dayZero, setDayZero] = useState<number>(monthAgo);
 
     useEffect( () => {
-        fetchSessions(timeStamp);
-    }, [timeStamp])
+        fetchSessions(dayZero);
+    }, [dayZero])
 
-    const fetchSessions: (timeStamp:number) => Promise<void> = async () => {
+    const fetchSessions: (dayZero:number) => Promise<void> = async () => {
         const { data } = await axios({
           method: "get",
-          url: `http://localhost:3001/events/chart/os/${timeStamp}`,
+          url: `http://localhost:3001/events/chart/os/${dayZero}`,
         });
         const counts = data;
         console.log("counts",counts);
@@ -37,7 +37,7 @@ const EventsByOs: React.FC<{}> = ({}) => {
     }
 
     const onEventChange = (dateToStart:string) => {
-      settimeStamp(getDateDifferences(dateToStart));
+      setDayZero(getDateDifferences(dateToStart));
     }
 
  
@@ -47,7 +47,7 @@ const EventsByOs: React.FC<{}> = ({}) => {
       <div>
         <DatePickerWrapper className="form">
         <TextField
-          id="timeStamp"
+          id="dayZero"
           label="start date"
           type="date"
           onChange={(e)=>{onEventChange(e.target.value)}}
@@ -56,7 +56,9 @@ const EventsByOs: React.FC<{}> = ({}) => {
           }}
         />
         </DatePickerWrapper>
-        <PieChart width={730} height={350}>
+        <ResponsiveContainer width="100%" height="100%">
+        <PieChartWrapper>
+        <PieChart width={500} height={350}>
             <Pie 
                 data={allOsCounts}
                 dataKey="count"
@@ -74,6 +76,8 @@ const EventsByOs: React.FC<{}> = ({}) => {
             <Tooltip/>
             <Legend/>
         </PieChart>
+        </PieChartWrapper>
+        </ResponsiveContainer>
         </div>
        : <h1>Loader</h1>
       }

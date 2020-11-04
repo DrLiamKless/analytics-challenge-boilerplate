@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Event } from '../../models/event'
-import { ChartWrapper, DatePickerWrapper } from "components/styled components/cohort.styles";
+import { ChartWrapper, DatePickerWrapper, LineChartWrapper } from "components/styled components/cohort.styles";
 import axios from 'axios'
-import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend } from 'recharts'
+import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend, ResponsiveContainer } from 'recharts'
 import { TextField } from "@material-ui/core";
 
 const SessionByDays: React.FC<{}> = ({}) => {
@@ -38,26 +38,31 @@ const SessionByDays: React.FC<{}> = ({}) => {
       { allSessions ?
       <div>
         <DatePickerWrapper className="form">
-        <TextField
-          id="offset"
-          label="start date"
-          type="date"
-          onChange={(e)=>{onEventChange(e.target.value)}}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
+          <TextField
+            id="offset"
+            label="start date"
+            type="date"
+            onChange={(e)=>{onEventChange(e.target.value)}}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
         </DatePickerWrapper>
-        <LineChart width={500} height={250} data={allSessions}
-        margin={{ top: 10, right: 60, bottom: 5 }}
-        >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" tick={{fontSize: 7}}/>
-        <YAxis tick={{fontSize: 7}}/>
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey="count" stroke="#8884d8" />
-      </LineChart>
+        <ResponsiveContainer width="100%" height="100%">
+        <LineChartWrapper>
+          <LineChart 
+            width={500} height={250} data={allSessions}
+            margin={{ top: 10, right: 60, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" tick={{fontSize: 7}}/>
+            <YAxis tick={{fontSize: 7}}/>
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="count" stroke="#8884d8" />
+          </LineChart>
+        </LineChartWrapper>
+        </ResponsiveContainer>
         </div>
        : <h1>Loader</h1>
       }
