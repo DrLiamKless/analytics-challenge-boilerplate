@@ -9,11 +9,6 @@ const mapContainerStyle = {
     height: '100%'
     };
 
-const ClustererOptions = {
-    imagePath:
-        'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m', // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
-    }
-
 const defaultCenter = { lat: 31.45, lng: 35 };
 
 const EventsMap: React.FC<{}> = ({}) => {
@@ -36,11 +31,7 @@ const EventsMap: React.FC<{}> = ({}) => {
     <MapWrapper>
         <LoadScript googleMapsApiKey={'AIzaSyCO2CJy9I3evBaiw5rCesn6vzC7TmC4vH0'}>
             <GoogleMap
-              options={ 
-                {
-                    disableDefaultUI: true
-                }
-              }
+              options={ {disableDefaultUI: true} }
               mapContainerStyle={mapContainerStyle}
               center={defaultCenter}
               zoom={1.5}
@@ -63,7 +54,6 @@ const EventsMap: React.FC<{}> = ({}) => {
                         }
                         />
                     ))
-
                         : <h1>Loader</h1>
                 }
                 </MarkerClusterer>

@@ -302,5 +302,55 @@ router.get('/chart/geolocation/:time',(req: Request, res: Response) => {
   res.send('/chart/geolocation/:time')
 })
 
+router.get('/chart/all-filtered/:page',(req: Request, res: Response) => {
+  const filters: Filter = req.query;
+
+  let filteredEvents:any[] = getAllEvents();
+  let results:{events?:Event[], more?:boolean} = {};
+
+  if(filters.search && filters.search !== "") {
+    const regex: RegExp = new RegExp (filters.search, "i");
+    filteredEvents = filteredEvents.filter((event) => {
+      return Object.keys(event).reduce((none: boolean, key) => {
+        return none || regex.test((event[key]).toString());
+      }, false)
+    })
+  }
+     
+  if(filters.type && filters.type !== "all") {
+    filteredEvents = filteredEvents.filter((event:Event) => event.name === filters.type)
+  }
+
+  if (filters.browser && filters.browser !== "all") {
+    filteredEvents = filteredEvents.filter((event:Event) => event.browser === filters.browser)
+  }
+
+  if(filters.sorting) {
+    filteredEvents = filters.sorting === "-date" ? 
+    sortEventsByDate(filteredEvents,"DESC") : 
+    sortEventsByDate(filteredEvents);
+  }
+
+  if(filters.offset) {
+   const slicedEvents = filteredEvents.slice(0 , filters.offset);
+   results.events = slicedEvents;
+  results.more = slicedEvents.length < filteredEvents.length ? true : false
+  } else {
+    results.events = filteredEvents;
+    results.more = false;
+  }
+  
+  const page:number = Number(req.params.page)
+
+  const endIndex = page*10
+  const startIndex = endIndex-10
+
+  const resultsPage = Object.assign({},results)
+  const slicedEvents = resultsPage.events?.slice(startIndex,endIndex)
+  resultsPage.events = slicedEvents
+  resultsPage.more = endIndex >= results.events.length ? false : true;
+
+  res.send(resultsPage)
+});
 
 export default router;

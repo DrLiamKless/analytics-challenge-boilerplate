@@ -1,9 +1,12 @@
 import styled, { createGlobalStyle } from 'styled-components';
 
 export const AdminCard = styled.div`
-    position: relative;
-    max-width: 100%;
+    /* position: relative; */
+    width: 100%;
     max-height: 100%;
+    padding: 32px;
+    margin-top: 80px;
+    margin-right: 32px;
     background: #ebfeff;
     border-radius: 10px;
     border: 2px solid #0085a3;
@@ -22,8 +25,8 @@ export const AdminCard = styled.div`
 `
 
 export const ChartWrapper = styled.div`
-    width: 100%;
-    height: 100%;
+    /* width: 100%; */
+    /* height: 100%; */
     min-height: 35vh;
     position: relative;
     display: flex;
@@ -31,6 +34,7 @@ export const ChartWrapper = styled.div`
     align-items: center;
     justify-content: center;
     margin-bottom: 200px;
+    border: 2px solid black;
 `
 
 export const EventLogWrapper = styled.div`
@@ -43,10 +47,11 @@ export const EventLogWrapper = styled.div`
     justify-content: center;
     overflow-y: scroll;
     overflow-x: hidden;
+    border: 2px solid black;
 `
 
 export const MapWrapper = styled.div`
-    width: 50vw;
+    width: 45vw;
     height: 30vw;
     padding-top: 80px;
     position: relative;
@@ -55,6 +60,17 @@ export const MapWrapper = styled.div`
     align-items: center;
     justify-content: center;
     margin-bottom: 200px;
+    border: 2px solid black;
+`
+
+export const LineChartWrapper = styled.div`
+    width: 100%;
+    min-width: 500px;
+`
+
+export const PieChartWrapper = styled.div`
+    width: 100%;
+    min-width: 500px;
 `
 
 export const FormWrapper = styled.div`

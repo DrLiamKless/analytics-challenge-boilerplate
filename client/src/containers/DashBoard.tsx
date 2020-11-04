@@ -36,12 +36,11 @@ const DashBoard: React.FC = () => {
   const classes = useStyles();
 
   return (
-    <>
       <AdminCard>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         Analytics
       </Typography>
-          {/* <ErrorBoundary>
+          <ErrorBoundary>
             <EventsMap/>
           </ErrorBoundary>
           <ErrorBoundary>
@@ -52,18 +51,17 @@ const DashBoard: React.FC = () => {
           </ErrorBoundary>
           <ErrorBoundary>
             <EventsLog/>
-          </ErrorBoundary> */}
+          </ErrorBoundary>
           <ErrorBoundary>
             <RetentionLog/>
           </ErrorBoundary>
-          {/* <ErrorBoundary>
+          <ErrorBoundary>
             <EventsByOs/>
           </ErrorBoundary>
           <ErrorBoundary>
             <PageViews/>
-          </ErrorBoundary> */}
+          </ErrorBoundary>
       </AdminCard>
-    </>
   );
 };
 

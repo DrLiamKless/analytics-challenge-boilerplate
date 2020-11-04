@@ -46,9 +46,10 @@ interface Props {
   children: React.ReactNode;
   authService: Interpreter<AuthMachineContext, any, AuthMachineEvents, any>;
   notificationsService: Interpreter<DataContext, any, DataEvents, any>;
+  admin: boolean;
 }
 
-const MainLayout: React.FC<Props> = ({ children, notificationsService, authService }) => {
+const MainLayout: React.FC<Props> = ({ children, notificationsService, authService, admin }) => {
   const classes = useStyles();
   const theme = useTheme();
   const [drawerState, sendDrawer] = useMachine(drawerMachine);
@@ -88,9 +89,9 @@ const MainLayout: React.FC<Props> = ({ children, notificationsService, authServi
         closeMobileDrawer={closeMobileDrawer}
         authService={authService}
       />
-      <main className={classes.content} data-test="main">
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="md" className={classes.container}>
+      <main className={!admin ? classes.content : "admin"} data-test="main">
+        <div className={!admin ? classes.appBarSpacer : "admin"} />
+        <Container maxWidth="md" className={!admin ? classes.container : "admin"}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
       {children}

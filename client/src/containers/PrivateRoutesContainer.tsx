@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Switch, Route } from "react-router";
+import React, { useEffect, useState } from "react";
+import { Switch, Route, useLocation } from "react-router";
 import { Interpreter } from "xstate";
 import MainLayout from "../components/MainLayout";
 import PrivateRoute from "../components/PrivateRoute";
@@ -32,13 +32,20 @@ const PrivateRoutesContainer: React.FC<Props> = ({
   bankAccountsService,
 }) => {
   const [, sendNotifications] = useService(notificationsService);
+  const [ admin, setAdmin ] = useState<boolean>(false);
+  const location = useLocation();
 
   useEffect(() => {
     sendNotifications({ type: "FETCH" });
   }, [sendNotifications]);
 
+  useEffect(() => {
+    location.pathname === "/admin" ? setAdmin(true) : setAdmin(false);
+    console.log(location.pathname);
+  }, [sendNotifications]);
+
   return (
-    <MainLayout notificationsService={notificationsService} authService={authService}>
+    <MainLayout notificationsService={notificationsService} authService={authService} admin={admin}>
       <UserOnboardingContainer
         authService={authService}
         bankAccountsService={bankAccountsService}
@@ -69,7 +76,7 @@ const PrivateRoutesContainer: React.FC<Props> = ({
           <TransactionDetailContainer authService={authService} />
         </PrivateRoute>
         <Route exact path="/admin">
-          <DashBoard />
+          <DashBoard/>
         </Route>
       </Switch>
     </MainLayout>
