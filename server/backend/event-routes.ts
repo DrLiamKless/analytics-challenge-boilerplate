@@ -186,7 +186,7 @@ router.get('/retention', (req: Request, res: Response) => {
   const dayZero:number = Number(req.query.dayZero)
   
   const dayZeroDate = new Date(dayZero);
-  dayZeroDate.setHours(3,0,0,0);
+  dayZeroDate.setHours(0,0,0,0);
   
   const weekAfterDayZero = new Date(dayZeroDate);
   weekAfterDayZero.setDate(weekAfterDayZero.getDate() + 7);
