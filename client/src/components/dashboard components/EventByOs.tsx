@@ -69,9 +69,9 @@ const EventsByOs: React.FC<{}> = ({}) => {
                 fill="#8884d8"
                 label
             >
-            {
-            allOsCounts.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
-                }    
+            {allOsCounts.map((entry, index) => 
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
+            }    
             </Pie>
             <Tooltip/>
             <Legend/>
