@@ -3,7 +3,7 @@ import { Event } from '../../models/event'
 import { ChartWrapper, DatePickerWrapper, PieChartWrapper } from "components/styled components/cohort.styles";
 import axios from 'axios'
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend, Pie ,PieChart, Cell, ResponsiveContainer } from 'recharts'
-import { TextField } from "@material-ui/core";
+import { TextField, CircularProgress  } from "@material-ui/core";
 
 const month = 1000*60*60*24*31
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AAAAAA','#800080'];
@@ -79,7 +79,7 @@ const EventsByOs: React.FC<{}> = ({}) => {
         </PieChartWrapper>
         </ResponsiveContainer>
         </div>
-       : <h1>Loader</h1>
+       : <CircularProgress/>
       }
     </ChartWrapper>
   );

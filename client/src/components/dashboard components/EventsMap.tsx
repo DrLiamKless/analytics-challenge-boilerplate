@@ -3,6 +3,7 @@ import { GoogleMap, LoadScript, Marker, MarkerClusterer } from '@react-google-ma
 import { MapWrapper } from "components/styled components/cohort.styles";
 import { Event } from '../../models/event'
 import axios from 'axios'
+import { CircularProgress } from "@material-ui/core";
 
 const mapContainerStyle = {
     width: '100%',
@@ -54,7 +55,7 @@ const EventsMap: React.FC<{}> = ({}) => {
                         }
                         />
                     ))
-                        : <h1>Loader</h1>
+                        : <CircularProgress/>
                 }
                 </MarkerClusterer>
             </GoogleMap>

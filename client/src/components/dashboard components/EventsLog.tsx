@@ -22,6 +22,7 @@ import {
     MenuItem,
     FormControl,
     IconButton,
+    CircularProgress,
 } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -217,7 +218,8 @@ const EventsLog: React.FC<{}> = ({}) => {
           <div className={classes.root}>
             { allEvents.events.map((event:Event,i) => {
               if (allEvents.events.length === i + 1) {
-                return (  
+                return (
+                  <div>  
                   <Accordion ref={lastEventAccordionRef} expanded={expanded === `panel${i+1}`} onChange={handleChange(`panel${i+1}`)}>
                 <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -253,7 +255,9 @@ const EventsLog: React.FC<{}> = ({}) => {
                         </Table>
                     </TableContainer>
                 </AccordionDetails>
-            </Accordion>)
+            </Accordion>
+                  {loading && <h5>loading ......</h5>}
+                  </div>)
               } else {
                 return (
                   <Accordion expanded={expanded === `panel${i+1}`} onChange={handleChange(`panel${i+1}`)}>
@@ -297,7 +301,7 @@ const EventsLog: React.FC<{}> = ({}) => {
           })}
         </div>
       </div>
-  : <h1>Loader</h1>
+  : <CircularProgress/>
       }
     </EventLogWrapper>
   );

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, CSSProperties } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Event, weeklyRetentionObject } from '../../models/event'
 import { ChartWrapper, TableEmptySquare, TableElement,DatePickerWrapper } from "components/styled components/cohort.styles";
-import { TextField } from "@material-ui/core";
+import { CircularProgress, TextField } from "@material-ui/core";
 
 import axios from 'axios'
 import { 
@@ -121,7 +121,7 @@ const RetentionLog: React.FC<{}> = ({}) => {
               ))}
             </TableElement>
           </div>
-      : <h1>Loader</h1>
+      : <CircularProgress/>
       }
     </ChartWrapper>
   );
