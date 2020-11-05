@@ -119,7 +119,7 @@ router.get('/by-days/:offset', (req: Request, res: Response) => {
   results.sort((dateA, dateB) => {     
     return new Date(dateA.date).getTime() - new Date(dateB.date).getTime()
 })
-
+  
   res.send(results)
 });
 
@@ -246,6 +246,16 @@ router.get('/retention', (req: Request, res: Response) => {
     weekAfterDayZero.setHours(0,0,0,0)
 
   }
+
+  results.forEach((result =>{
+    result.weeklyRetention.forEach(((percentage,i) => {
+      console.log("not null", percentage)
+      if (isNaN(percentage)) {
+        console.log(percentage)
+        result.weeklyRetention = result.weeklyRetention.map((percentage => 0));
+      }
+    }))
+  }))
 
   res.send(results)
 });

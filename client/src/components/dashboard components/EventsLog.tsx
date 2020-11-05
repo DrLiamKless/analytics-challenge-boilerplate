@@ -132,6 +132,7 @@ const EventsLog: React.FC<{}> = ({}) => {
       }
 
       const queryString:string = queryArray.join("&")
+      console.log(queryString);
       return queryString
     }
       
@@ -153,7 +154,7 @@ const EventsLog: React.FC<{}> = ({}) => {
                       </InputAdornment>
                     }/>
                   }
-                  name="seacrh"
+                  name="search"
                   control={control}
                   defaultValue=""
                 />
@@ -177,6 +178,7 @@ const EventsLog: React.FC<{}> = ({}) => {
                 <Controller
                   as={
                     <Select labelId="event" label={"event"}>
+                      <MenuItem value="">all</MenuItem>
                       <MenuItem value="login">login</MenuItem>
                       <MenuItem value="signup">signup</MenuItem>
                       <MenuItem value="admin">admin</MenuItem>
@@ -193,6 +195,7 @@ const EventsLog: React.FC<{}> = ({}) => {
                 <Controller
                   as={
                     <Select labelId="browser" label={"browser"}>
+                      <MenuItem value="">all</MenuItem>
                       <MenuItem value="chrome">chrome</MenuItem>
                       <MenuItem value="safari">safari</MenuItem>
                       <MenuItem value="edge">edge</MenuItem>
