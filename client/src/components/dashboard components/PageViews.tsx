@@ -4,12 +4,10 @@ import { ChartWrapper, DatePickerWrapper } from "components/styled components/ad
 import axios from 'axios'
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend, Pie ,PieChart, Cell, ResponsiveContainer } from 'recharts'
 import { CircularProgress, TextField } from "@material-ui/core";
+import { monthAgo, monthAgoDate } from "helpers/helpers";
 
-const month = 1000*60*60*24*31
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AAAAAA','#800080'];
 
-const now = Date.now();
-const monthAgo = now - 1000*60*60*24*31
 
 const PageViews: React.FC<{}> = ({}) => {
     const [allUrlVisits, setAllUrlVisits] = useState<{url: string, count: number}[]>();
@@ -51,13 +49,14 @@ const PageViews: React.FC<{}> = ({}) => {
           id="dayZero"
           label="start date"
           type="date"
+          defaultValue={monthAgoDate}
           onChange={(e)=>{onEventChange(e.target.value)}}
           InputLabelProps={{
             shrink: true,
           }}
         />
         </DatePickerWrapper>
-        <ResponsiveContainer width="100%" height="100%">
+        {/* <ResponsiveContainer width="100%" height="100%"> */}
             <PieChart width={400} height={300}>
                 <Pie 
                     data={allUrlVisits}
@@ -84,7 +83,7 @@ const PageViews: React.FC<{}> = ({}) => {
                     }))
                   }/>
             </PieChart>
-        </ResponsiveContainer>
+        {/* </ResponsiveContainer> */}
         </div>
        : <CircularProgress/>
       }

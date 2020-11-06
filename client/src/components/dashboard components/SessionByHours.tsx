@@ -4,6 +4,7 @@ import { Event } from '../../models/event'
 import axios from 'axios'
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend } from 'recharts'
 import { CircularProgress, TextField } from "@material-ui/core";
+import { nowDate } from "helpers/helpers";
 
 const SessionByHours: React.FC<{}> = ({}) => {
   const [allSessions, setAllSessions] = useState<object[]>();
@@ -43,6 +44,7 @@ const SessionByHours: React.FC<{}> = ({}) => {
           id="offset"
           label="date"
           type="date"
+          defaultValue={nowDate}
           onChange={(e)=>{onEventChange(e.target.value)}}
           InputLabelProps={{
             shrink: true,

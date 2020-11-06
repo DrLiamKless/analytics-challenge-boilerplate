@@ -26,6 +26,7 @@ import {
     IconButton,
 } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { monthAgo, monthAgoDate } from "helpers/helpers";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,9 +48,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-
-const now = Date.now();
-const monthAgo = now - 1000*60*60*24*31
 
 const RetentionLog: React.FC<{}> = ({}) => {
   const classes = useStyles();
@@ -92,6 +90,7 @@ const RetentionLog: React.FC<{}> = ({}) => {
             id="dayZero"
             label="start date"
             type="date"
+            defaultValue={monthAgoDate}
             onChange={(e)=>{onEventChange(e.target.value)}}
             InputLabelProps={{
               shrink: true,

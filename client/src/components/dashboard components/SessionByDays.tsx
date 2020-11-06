@@ -4,6 +4,7 @@ import { ChartWrapper, DatePickerWrapper } from "components/styled components/ad
 import axios from 'axios'
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend, ResponsiveContainer } from 'recharts'
 import { CircularProgress, TextField } from "@material-ui/core";
+import { nowDate } from "helpers/helpers";
 
 const SessionByDays: React.FC<{}> = ({}) => {
     const [allSessions, setAllSessions] = useState<object[]>();
@@ -44,6 +45,7 @@ const SessionByDays: React.FC<{}> = ({}) => {
             id="offset"
             label="start date"
             type="date"
+            defaultValue={nowDate}
             onChange={(e)=>{onEventChange(e.target.value)}}
             InputLabelProps={{
               shrink: true,

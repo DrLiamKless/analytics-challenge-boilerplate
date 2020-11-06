@@ -113,15 +113,38 @@ router.get('/by-days/:offset', (req: Request, res: Response) => {
   const dates = groupdEvents.map(groupedEvent => Object.keys(groupedEvent));
   const values = groupdEvents.map(groupedEvent => Object.values(groupedEvent));
 
-  const results:{date:string, count:number}[] = groupdEvents.map((groupedEvent, i) => {
+  const counts:{date:string, count:number}[] = groupdEvents.map((groupedEvent, i) => {
     return {date: dates[i][0], count:values[i][0]}
   }) 
 
-  results.sort((dateA, dateB) => {     
+  counts.sort((dateA, dateB) => {     
     return new Date(dateA.date).getTime() - new Date(dateB.date).getTime()
 })
-  
-  res.send(results)
+
+let results:{date:string, count:number}[] = [];
+let start = oneWeekAndXdaysAgo.getTime();
+const end = XdaysAgo.getTime();
+while (start < end) {
+  results.push({date: new Date(start).toLocaleString().split(', ')[0], count: 0})
+  start = start + 1000*60*60*24;
+}
+
+results.forEach((result,i) => {
+  if (result.date === "10/25/2020") {
+    results.splice(i,1);
+    return
+  }
+})
+
+counts.forEach((count) => {
+  results.forEach(result => {
+    if (result.date === count.date) {
+      result.count = count.count
+    }
+  })
+})
+
+  res.send(results);
 });
 
 router.get('/by-hours/:offset', (req: Request, res: Response) => {
