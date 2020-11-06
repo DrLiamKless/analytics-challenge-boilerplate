@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Event } from '../../models/event'
-import { ChartWrapper, DatePickerWrapper, LineChartWrapper } from "components/styled components/cohort.styles";
+import { ChartWrapper, DatePickerWrapper } from "components/styled components/admin.styles";
 import axios from 'axios'
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend, ResponsiveContainer } from 'recharts'
 import { CircularProgress, TextField } from "@material-ui/core";
@@ -35,6 +35,8 @@ const SessionByDays: React.FC<{}> = ({}) => {
       
   return (
     <ChartWrapper>
+      <h3>Sessions By Days</h3>
+      <h5>Counts the amount of sessions A week back from the chosen date</h5>
       { allSessions ?
       <div>
         <DatePickerWrapper className="form">
@@ -48,10 +50,8 @@ const SessionByDays: React.FC<{}> = ({}) => {
             }}
           />
         </DatePickerWrapper>
-        <ResponsiveContainer width="100%" height="100%">
-        <LineChartWrapper>
           <LineChart 
-            width={500} height={250} data={allSessions}
+            width={400} height={200} data={allSessions}
             margin={{ top: 10, right: 60, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
@@ -61,8 +61,6 @@ const SessionByDays: React.FC<{}> = ({}) => {
             <Legend />
             <Line type="monotone" dataKey="count" stroke="#8884d8" />
           </LineChart>
-        </LineChartWrapper>
-        </ResponsiveContainer>
         </div>
        : <CircularProgress/>
       }

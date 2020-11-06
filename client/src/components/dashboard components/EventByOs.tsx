@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Event } from '../../models/event'
-import { ChartWrapper, DatePickerWrapper, PieChartWrapper } from "components/styled components/cohort.styles";
+import { ChartWrapper, DatePickerWrapper } from "components/styled components/admin.styles";
 import axios from 'axios'
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend, Pie ,PieChart, Cell, ResponsiveContainer } from 'recharts'
 import { TextField, CircularProgress  } from "@material-ui/core";
@@ -25,7 +25,6 @@ const EventsByOs: React.FC<{}> = ({}) => {
           url: `http://localhost:3001/events/chart/os/${dayZero}`,
         });
         const counts = data;
-        console.log("counts",counts);
         setAllOsCounts(counts);
       };
 
@@ -43,6 +42,8 @@ const EventsByOs: React.FC<{}> = ({}) => {
  
   return (
     <ChartWrapper>
+      <h3>OS Calculator</h3>
+      <h5>Counts the different OS uses for each event</h5>
       { allOsCounts ?
       <div>
         <DatePickerWrapper className="form">
@@ -57,8 +58,7 @@ const EventsByOs: React.FC<{}> = ({}) => {
         />
         </DatePickerWrapper>
         <ResponsiveContainer width="100%" height="100%">
-        <PieChartWrapper>
-        <PieChart width={500} height={350}>
+        <PieChart width={400} height={300}>
             <Pie 
                 data={allOsCounts}
                 dataKey="count"
@@ -76,7 +76,6 @@ const EventsByOs: React.FC<{}> = ({}) => {
             <Tooltip/>
             <Legend/>
         </PieChart>
-        </PieChartWrapper>
         </ResponsiveContainer>
         </div>
        : <CircularProgress/>

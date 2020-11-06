@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ChartWrapper, DatePickerWrapper } from "components/styled components/cohort.styles";
+import { ChartWrapper, DatePickerWrapper } from "components/styled components/admin.styles";
 import { Event } from '../../models/event'
 import axios from 'axios'
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend } from 'recharts'
@@ -34,6 +34,8 @@ const SessionByHours: React.FC<{}> = ({}) => {
       
   return (
     <ChartWrapper>
+      <h3>Sessions By Hours</h3>
+      <h5>Counts the amount of sessions for the chosen date</h5>
       { allSessions ?
       <div>
         <DatePickerWrapper className="form">
@@ -47,7 +49,7 @@ const SessionByHours: React.FC<{}> = ({}) => {
           }}
         />
         </DatePickerWrapper>
-        <LineChart width={500} height={250} data={allSessions}
+        <LineChart width={400} height={200} data={allSessions}
           margin={{ top: 10, right: 60, bottom: 5 }}
         >
         <CartesianGrid strokeDasharray="3 3" />

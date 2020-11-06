@@ -1,12 +1,10 @@
 import styled, { createGlobalStyle } from 'styled-components';
 
 export const AdminCard = styled.div`
-    /* position: relative; */
     width: 100%;
     max-height: 100%;
     padding: 32px;
     margin-top: 80px;
-    margin-right: 32px;
     background: #ebfeff;
     border-radius: 10px;
     border: 2px solid #0085a3;
@@ -15,75 +13,59 @@ export const AdminCard = styled.div`
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
+    gap: 20px;
     justify-content: center;
 
     h2 {
         position: absolute;
-        top: 10px;
-        left: 10px;
     }
 `
 
 export const ChartWrapper = styled.div`
-    /* width: 100%; */
-    /* height: 100%; */
-    min-height: 35vh;
-    position: relative;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    margin-bottom: 200px;
-    border: 2px solid black;
+    border: 1px solid black;
 `
 
 export const EventLogWrapper = styled.div`
-    max-width: 100%;
-    min-height: 35vh;
-    position: relative;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    text-align: center;
+    width: 50vw;
+    height: 25vw;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid black;
+`
+
+export const RetentionLogWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    border: 2px solid black;
+    border: 1px solid black;
 `
 
 export const MapWrapper = styled.div`
-    width: 45vw;
-    height: 30vw;
-    padding-top: 80px;
-    position: relative;
+    width: 60vw;
+    height: 35vw;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 200px;
-    border: 2px solid black;
-`
-
-export const LineChartWrapper = styled.div`
-    width: 100%;
-    min-width: 500px;
-`
-
-export const PieChartWrapper = styled.div`
-    width: 100%;
-    min-width: 500px;
+    border: 1px solid black;
 `
 
 export const FormWrapper = styled.div`
     max-width: 80%;
     height: 50%;
     margin: 0 auto;
-    position: relative;
-    margin-bottom: 5px;
     display: flex;
     flex-direction: row;
+    column-gap: 10px;
     align-items: center;
     justify-content: space-between;
-    position: sticky;
     top: 0;
 `
 
@@ -99,17 +81,21 @@ export const DatePickerWrapper = styled.div`
 export const TableEmptySquare = styled.div`
     width: 80px;
     height: 60px;
-    border: 2px solid #0085a3;
+    border: 1px solid #0085a3;
     background: #ffff;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.25);
 `
 
-export const TableElement = styled.table`
+export const TableWrapper = styled.div`
+width: 50vw;
+height: 25vw;
+overflow-y: auto;
+overflow-x: auto;
 
 th, td, tr {
     width: 80px;
     height: 60px;
-    border: 2px solid #0085a3;
+    border: 1px solid #0085a3;
     background: #ffff;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.25);
 }

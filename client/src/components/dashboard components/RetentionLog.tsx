@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, CSSProperties } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Event, weeklyRetentionObject } from '../../models/event'
-import { ChartWrapper, TableEmptySquare, TableElement,DatePickerWrapper } from "components/styled components/cohort.styles";
+import { ChartWrapper, TableEmptySquare, TableWrapper,DatePickerWrapper, RetentionLogWrapper } from "components/styled components/admin.styles";
 import { CircularProgress, TextField } from "@material-ui/core";
 
 import axios from 'axios'
@@ -67,7 +67,6 @@ const RetentionLog: React.FC<{}> = ({}) => {
       });
 
       const retentions = data;
-      console.log(data);
       setAllRetentions(retentions);
   };
 
@@ -83,7 +82,9 @@ const RetentionLog: React.FC<{}> = ({}) => {
   }
       
   return (
-    <ChartWrapper>
+    <RetentionLogWrapper>
+      <h3>Retentions Cohort</h3>
+      <h5>Shows the retentions for the chosen date until today</h5>
       { allRetentions ?
           <div>
           <DatePickerWrapper className="form">
@@ -97,33 +98,35 @@ const RetentionLog: React.FC<{}> = ({}) => {
             }}
           />
           </DatePickerWrapper>
-            <TableElement>
-              <tr>
-                <th  style={{backgroundColor:"#7777", width: "200px"}}></th>
-                  {allRetentions.map(retention => 
-                  <th style={{backgroundColor:"#7777"}}>
-                    week {retention.registrationWeek}
-                  </th>)}
-              </tr>
-              <tr> 
-                <th>All Users</th>
-                {allRetentions.map(retention => <th>SUM</th>)}
-              </tr>
-              {allRetentions.map((retention, i) => (
-              <tr>
-                  <td>{`${retention.start} - ${retention.end}`}</td>
-                  {retention.weeklyRetention.map((percentage, j) =>
-                    <td style={{backgroundColor:`RGB(150,${percentage * 2.5},80`}}>
-                      {`${percentage}`}
-                    </td>
-                  )}
-              </tr>
-              ))}
-            </TableElement>
+            <TableWrapper>
+              <table>
+                <tr>
+                  <th  style={{backgroundColor:"#7777", width: "200px"}}></th>
+                    {allRetentions.map(retention => 
+                    <th style={{backgroundColor:"#7777"}}>
+                      week {retention.registrationWeek}
+                    </th>)}
+                </tr>
+                {/* <tr> 
+                  <th>All Users</th>
+                  {allRetentions.map(retention => <th>SUM</th>)}
+                </tr> */}
+                {allRetentions.map((retention, i) => (
+                <tr>
+                    <td style={{textAlign: "center"}}><b>{`${retention.start} - ${retention.end}`}</b></td>
+                    {retention.weeklyRetention.map((percentage, j) =>
+                      <td style={{backgroundColor:`RGB(150,${percentage * 2.5},80`}}>
+                        {`${percentage}`}
+                      </td>
+                    )}
+                </tr>
+                ))}
+              </table>
+            </TableWrapper>
           </div>
       : <CircularProgress/>
       }
-    </ChartWrapper>
+    </RetentionLogWrapper>
   );
 };
 
