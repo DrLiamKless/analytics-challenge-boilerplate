@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ChartWrapper, DatePickerWrapper } from "components/styled components/admin.styles";
 import { Event } from '../../models/event'
 import axios from 'axios'
-import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend } from 'recharts'
+import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend, ResponsiveContainer } from 'recharts'
 import { CircularProgress, TextField } from "@material-ui/core";
 import { nowDate } from "helpers/helpers";
 
@@ -36,7 +36,7 @@ const SessionByHours: React.FC<{}> = ({}) => {
   return (
     <ChartWrapper>
       <h3>Sessions By Hours</h3>
-      <h5>Counts the amount of sessions for the chosen date</h5>
+      <h5>Counts the amount of sessions for each hour in the chosen date</h5>
       { allSessions ?
       <div>
         <DatePickerWrapper className="form">
@@ -51,16 +51,16 @@ const SessionByHours: React.FC<{}> = ({}) => {
           }}
         />
         </DatePickerWrapper>
-        <LineChart width={400} height={200} data={allSessions}
-          margin={{ top: 10, right: 60, bottom: 5 }}
-        >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis tick={{fontSize: 7}} dataKey="hour" />
-        <YAxis tick={{fontSize: 7}}/>
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey="count" stroke="#8884d8" />
-      </LineChart>
+        <ResponsiveContainer width="100%" height={200}>
+          <LineChart data={allSessions} margin={{ top: 10, right: 60, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis tick={{fontSize: 7}} dataKey="hour" />
+            <YAxis tick={{fontSize: 7}}/>
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="count" stroke="#8884d8" />
+          </LineChart>
+       </ResponsiveContainer>
         </div>
        : <CircularProgress/>
       }

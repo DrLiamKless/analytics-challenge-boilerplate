@@ -56,34 +56,34 @@ const PageViews: React.FC<{}> = ({}) => {
           }}
         />
         </DatePickerWrapper>
-        {/* <ResponsiveContainer width="100%" height="100%"> */}
-            <PieChart width={400} height={300}>
-                <Pie 
-                    data={allUrlVisits}
-                    dataKey="count"
-                    nameKey="url"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={30}
-                    fill="#8884d8"
-                    label
-                >
-                {
-                allUrlVisits.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
-                }    
-                </Pie>
-                <Tooltip/>
-                <Legend payload={
-                  allUrlVisits.map(
-                    (visit, index) => ({
-                      id: visit.url,
-                      type: "circle",
-                      value: `${visit.url.split('3000/')[1]}`,
-                      color: `${COLORS[index % COLORS.length]}`,
-                    }))
-                  }/>
-            </PieChart>
-        {/* </ResponsiveContainer> */}
+        <ResponsiveContainer width="100%" height={300}>
+          <PieChart>
+              <Pie 
+                  data={allUrlVisits}
+                  dataKey="count"
+                  nameKey="url"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={30}
+                  fill="#8884d8"
+                  label
+              >
+              {
+              allUrlVisits.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
+              }    
+              </Pie>
+              <Tooltip/>
+              <Legend payload={
+                allUrlVisits.map(
+                  (visit, index) => ({
+                    id: visit.url,
+                    type: "circle",
+                    value: `${visit.url.split('3000/')[1]}`,
+                    color: `${COLORS[index % COLORS.length]}`,
+                  }))
+                }/>
+          </PieChart>
+        </ResponsiveContainer>
         </div>
        : <CircularProgress/>
       }

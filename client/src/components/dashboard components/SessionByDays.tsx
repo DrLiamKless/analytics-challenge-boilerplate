@@ -52,10 +52,8 @@ const SessionByDays: React.FC<{}> = ({}) => {
             }}
           />
         </DatePickerWrapper>
-          <LineChart 
-            width={400} height={200} data={allSessions}
-            margin={{ top: 10, right: 60, bottom: 5 }}
-          >
+        <ResponsiveContainer width="100%" height={200} >
+          <LineChart data={allSessions} margin={{ top: 10, right: 60, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" tick={{fontSize: 7}}/>
             <YAxis tick={{fontSize: 7}}/>
@@ -63,6 +61,7 @@ const SessionByDays: React.FC<{}> = ({}) => {
             <Legend />
             <Line type="monotone" dataKey="count" stroke="#8884d8" />
           </LineChart>
+        </ResponsiveContainer>
         </div>
        : <CircularProgress/>
       }

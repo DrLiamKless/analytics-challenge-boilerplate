@@ -55,8 +55,8 @@ const EventsByOs: React.FC<{}> = ({}) => {
           }}
         />
         </DatePickerWrapper>
-        {/* <ResponsiveContainer width="100%" height="100%"> */}
-        <PieChart width={400} height={300}>
+        <ResponsiveContainer width="100%" height={300}>
+          <PieChart width={400} height={300}>
             <Pie 
                 data={allOsCounts}
                 dataKey="count"
@@ -73,8 +73,8 @@ const EventsByOs: React.FC<{}> = ({}) => {
             </Pie>
             <Tooltip/>
             <Legend/>
-        </PieChart>
-        {/* </ResponsiveContainer> */}
+          </PieChart>
+        </ResponsiveContainer>
         </div>
        : <CircularProgress/>
       }

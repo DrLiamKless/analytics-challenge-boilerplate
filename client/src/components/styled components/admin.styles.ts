@@ -22,10 +22,9 @@ export const AdminCard = styled.div`
 `
 
 export const ChartWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    text-align: center;
     border: 1px solid black;
+    width: 40%;
 `
 
 export const EventLogWrapper = styled.div`
@@ -48,8 +47,8 @@ export const RetentionLogWrapper = styled.div`
 `
 
 export const MapWrapper = styled.div`
-    width: 60vw;
-    height: 35vw;
+    width: 100%;
+    height: 30vw;
     display: flex;
     flex-direction: column;
     align-items: center;
