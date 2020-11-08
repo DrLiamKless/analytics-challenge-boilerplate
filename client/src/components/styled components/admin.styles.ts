@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 
 export const AdminCard = styled.div`
     width: 100%;
@@ -15,10 +15,6 @@ export const AdminCard = styled.div`
     align-items: center;
     gap: 20px;
     justify-content: center;
-
-    h2 {
-        position: absolute;
-    }
 `
 
 export const ChartWrapper = styled.div`
@@ -75,14 +71,6 @@ export const DatePickerWrapper = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-`
-
-export const TableEmptySquare = styled.div`
-    width: 80px;
-    height: 60px;
-    border: 1px solid #0085a3;
-    background: #ffff;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.25);
 `
 
 export const TableWrapper = styled.div`

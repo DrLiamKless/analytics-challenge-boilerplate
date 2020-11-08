@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback, MutableRefObject } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Event } from '../../models/event'
 import { EventLogWrapper, FormWrapper } from "components/styled components/admin.styles";
@@ -62,13 +62,13 @@ const EventsLog: React.FC<{}> = ({}) => {
     const [allEvents, setAllEvents] = useState<{events:Event[], more:boolean}>();
     const { register, handleSubmit, watch, errors, control } = useForm();
     const [filters, setFilters] = useState<Filter>();
-    // const [offset, setOffset] = useState<number>(10);
     const [pageNumber, setPageNumber] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
     const [hasMore, setHasMore] = useState<boolean>(true);
 
 
     const observer = useRef<any>();
+    
     const lastEventAccordionRef = useCallback((node:HTMLElement) => {
 
       if(loading) return
@@ -224,11 +224,10 @@ const EventsLog: React.FC<{}> = ({}) => {
                   <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls={`panel${i+1}bh-content`}
-                  id={`panel${i+1}bh-header`}
-                  >
+                  id={`panel${i+1}bh-header`}>
                     <Typography className={classes.heading}>{event.name}</Typography>
                     <Typography className={classes.secondaryHeading}>By User-Id {event.distinct_user_id}</Typography>
-                 </AccordionSummary>
+                  </AccordionSummary>
                 <AccordionDetails>
                   <TableContainer component={Paper}>
                     <Table className={classes.table} size="small" aria-label="a dense table">
@@ -242,7 +241,7 @@ const EventsLog: React.FC<{}> = ({}) => {
                       </TableRow>
                       </TableHead>
                       <TableBody>
-                          <TableRow>
+                        <TableRow>
                           <TableCell component="th" scope="row">
                               {new Date(event.date).toLocaleDateString()}
                           </TableCell>
@@ -250,7 +249,7 @@ const EventsLog: React.FC<{}> = ({}) => {
                           <TableCell align="center">{event.browser}</TableCell>
                           <TableCell align="center">{event.url}</TableCell>
                           <TableCell align="center">{event.session_id}</TableCell>
-                          </TableRow>
+                        </TableRow>
                       </TableBody>
                     </Table>
                   </TableContainer>
@@ -298,9 +297,9 @@ const EventsLog: React.FC<{}> = ({}) => {
                 </Accordion>
               )}
             })}
+          </div>
       </div>
-    </div>
-  : <CircularProgress/>
+      : <CircularProgress/>
       }
     </EventLogWrapper>
   );

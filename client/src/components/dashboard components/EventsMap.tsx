@@ -33,36 +33,36 @@ const EventsMap: React.FC<{}> = ({}) => {
         <h3>Events Map</h3>
         <h5>Shows the location for all the events</h5>
         {allEvents ? 
-        <LoadScript googleMapsApiKey={'AIzaSyCO2CJy9I3evBaiw5rCesn6vzC7TmC4vH0'}>
-            <GoogleMap
-              options={ {disableDefaultUI: true} }
-              mapContainerStyle={mapContainerStyle}
-              center={defaultCenter}
-              zoom={1.5}
-              >
-                <MarkerClusterer
-                    averageCenter
-                    enableRetinaIcons
-                    gridSize={80}
-                    >
-                { 
-                    (clusterer) => allEvents ? allEvents.map(event => (
-                        <Marker
-                        key={event._id} 
-                        clusterer={clusterer}
-                        position={
-                            {  
-                                lat: event.geolocation.location.lat, 
-                                lng: event.geolocation.location.lng
+            <LoadScript googleMapsApiKey={'AIzaSyCO2CJy9I3evBaiw5rCesn6vzC7TmC4vH0'}>
+                <GoogleMap
+                options={ {disableDefaultUI: true} }
+                mapContainerStyle={mapContainerStyle}
+                center={defaultCenter}
+                zoom={1.5}
+                >
+                    <MarkerClusterer
+                        averageCenter
+                        enableRetinaIcons
+                        gridSize={80}
+                        >
+                    { 
+                        (clusterer) => allEvents ? allEvents.map(event => (
+                            <Marker
+                            key={event._id} 
+                            clusterer={clusterer}
+                            position={
+                                {  
+                                    lat: event.geolocation.location.lat, 
+                                    lng: event.geolocation.location.lng
+                                }
                             }
-                        }
-                        />
-                        ))
-                        : <CircularProgress/>
-                }
-                </MarkerClusterer>
-            </GoogleMap>
-        </LoadScript>
+                            />
+                            ))
+                            : <CircularProgress/>
+                    }
+                    </MarkerClusterer>
+                </GoogleMap>
+            </LoadScript>
         : <CircularProgress/>}
     </MapWrapper>
     );

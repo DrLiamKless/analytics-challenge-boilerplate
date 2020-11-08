@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { ChartWrapper, DatePickerWrapper } from "components/styled components/admin.styles";
-import { Event } from '../../models/event'
 import axios from 'axios'
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend, ResponsiveContainer } from 'recharts'
 import { CircularProgress, TextField } from "@material-ui/core";
@@ -40,16 +39,16 @@ const SessionByHours: React.FC<{}> = ({}) => {
       { allSessions ?
       <div>
         <DatePickerWrapper className="form">
-        <TextField
-          id="offset"
-          label="date"
-          type="date"
-          defaultValue={nowDate}
-          onChange={(e)=>{onEventChange(e.target.value)}}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
+          <TextField
+            id="offset"
+            label="date"
+            type="date"
+            defaultValue={nowDate}
+            onChange={(e)=>{onEventChange(e.target.value)}}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
         </DatePickerWrapper>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={allSessions} margin={{ top: 10, right: 60, bottom: 5 }}>
@@ -60,8 +59,8 @@ const SessionByHours: React.FC<{}> = ({}) => {
             <Legend />
             <Line type="monotone" dataKey="count" stroke="#8884d8" />
           </LineChart>
-       </ResponsiveContainer>
-        </div>
+        </ResponsiveContainer>
+      </div>
        : <CircularProgress/>
       }
     </ChartWrapper>

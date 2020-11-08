@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Event } from '../../models/event'
 import { ChartWrapper, DatePickerWrapper } from "components/styled components/admin.styles";
 import axios from 'axios'
-import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend, Pie ,PieChart, Cell, ResponsiveContainer } from 'recharts'
+import {Tooltip, Legend, Pie ,PieChart, Cell, ResponsiveContainer } from 'recharts'
 import { TextField, CircularProgress  } from "@material-ui/core";
 import { monthAgo, monthAgoDate } from "helpers/helpers";
 
@@ -75,7 +74,7 @@ const EventsByOs: React.FC<{}> = ({}) => {
             <Legend/>
           </PieChart>
         </ResponsiveContainer>
-        </div>
+      </div>
        : <CircularProgress/>
       }
     </ChartWrapper>
