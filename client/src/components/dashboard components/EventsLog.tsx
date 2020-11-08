@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef, useCallback, MutableRefObject } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Event } from '../../models/event'
-import { EventLogWrapper, FormWrapper } from "components/styled components/cohort.styles";
+import { EventLogWrapper, FormWrapper } from "components/styled components/admin.styles";
 import axios from 'axios'
 import { 
     Accordion, 
@@ -22,6 +22,7 @@ import {
     MenuItem,
     FormControl,
     IconButton,
+    CircularProgress,
 } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -34,8 +35,8 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       position: "relative",
       padding: "10px",
-      maxWidth: '400px',
-      maxHeight: '100px',
+      maxWidth: '100%',
+      maxHeight: '100%',
     },
     heading: {
       fontSize: theme.typography.pxToRem(15),
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
       maxWidth: "100%",
     },
     formControl: {
-      width: "7vw",
+      width: "100%",
     }
   }),
 );
@@ -61,13 +62,13 @@ const EventsLog: React.FC<{}> = ({}) => {
     const [allEvents, setAllEvents] = useState<{events:Event[], more:boolean}>();
     const { register, handleSubmit, watch, errors, control } = useForm();
     const [filters, setFilters] = useState<Filter>();
-    // const [offset, setOffset] = useState<number>(10);
     const [pageNumber, setPageNumber] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
     const [hasMore, setHasMore] = useState<boolean>(true);
 
 
     const observer = useRef<any>();
+    
     const lastEventAccordionRef = useCallback((node:HTMLElement) => {
 
       if(loading) return
@@ -108,7 +109,6 @@ const EventsLog: React.FC<{}> = ({}) => {
           if(prevEvents && pageNumber !== 1) {
             const newEvents:{events:Event[], more:boolean} = prevEvents 
             newEvents.events.push(...events.events);
-            console.log(newEvents);
             return newEvents
           } else {
             return events
@@ -137,6 +137,8 @@ const EventsLog: React.FC<{}> = ({}) => {
       
   return (
     <EventLogWrapper>
+      <h3>Events Log</h3>
+      <h5>A Usefull filtered search for all off the website's events</h5>
       { allEvents ?
       <div>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -153,7 +155,7 @@ const EventsLog: React.FC<{}> = ({}) => {
                       </InputAdornment>
                     }/>
                   }
-                  name="seacrh"
+                  name="search"
                   control={control}
                   defaultValue=""
                 />
@@ -177,6 +179,7 @@ const EventsLog: React.FC<{}> = ({}) => {
                 <Controller
                   as={
                     <Select labelId="event" label={"event"}>
+                      <MenuItem value="">all</MenuItem>
                       <MenuItem value="login">login</MenuItem>
                       <MenuItem value="signup">signup</MenuItem>
                       <MenuItem value="admin">admin</MenuItem>
@@ -193,6 +196,7 @@ const EventsLog: React.FC<{}> = ({}) => {
                 <Controller
                   as={
                     <Select labelId="browser" label={"browser"}>
+                      <MenuItem value="">all</MenuItem>
                       <MenuItem value="chrome">chrome</MenuItem>
                       <MenuItem value="safari">safari</MenuItem>
                       <MenuItem value="edge">edge</MenuItem>
@@ -214,87 +218,88 @@ const EventsLog: React.FC<{}> = ({}) => {
           <div className={classes.root}>
             { allEvents.events.map((event:Event,i) => {
               if (allEvents.events.length === i + 1) {
-                return (  
-                  <Accordion ref={lastEventAccordionRef} expanded={expanded === `panel${i+1}`} onChange={handleChange(`panel${i+1}`)}>
-                <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel${i+1}bh-content`}
-                id={`panel${i+1}bh-header`}
-                >
-                <Typography className={classes.heading}>{event.name}</Typography>
-                <Typography className={classes.secondaryHeading}>By User-Id {event.distinct_user_id}</Typography>
-                </AccordionSummary>
+                return (
+              <div>  
+                <Accordion ref={lastEventAccordionRef} expanded={expanded === `panel${i+1}`} onChange={handleChange(`panel${i+1}`)}>
+                  <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel${i+1}bh-content`}
+                  id={`panel${i+1}bh-header`}>
+                    <Typography className={classes.heading}>{event.name}</Typography>
+                    <Typography className={classes.secondaryHeading}>By User-Id {event.distinct_user_id}</Typography>
+                  </AccordionSummary>
                 <AccordionDetails>
-                    <TableContainer component={Paper}>
-                        <Table className={classes.table} size="small" aria-label="a dense table">
-                            <TableHead>
-                            <TableRow>
-                                <TableCell align="center">Date</TableCell>
-                                <TableCell align="center">os</TableCell>
-                                <TableCell align="center">browser</TableCell>
-                                <TableCell align="center">url</TableCell>
-                                <TableCell align="center">session id</TableCell>
-                            </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                <TableRow>
-                                <TableCell component="th" scope="row">
-                                    {new Date(event.date).toLocaleDateString()}
-                                </TableCell>
-                                <TableCell align="center">{event.os}</TableCell>
-                                <TableCell align="center">{event.browser}</TableCell>
-                                <TableCell align="center">{event.url}</TableCell>
-                                <TableCell align="center">{event.session_id}</TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                  <TableContainer component={Paper}>
+                    <Table className={classes.table} size="small" aria-label="a dense table">
+                      <TableHead>
+                      <TableRow>
+                          <TableCell align="center">Date</TableCell>
+                          <TableCell align="center">os</TableCell>
+                          <TableCell align="center">browser</TableCell>
+                          <TableCell align="center">url</TableCell>
+                          <TableCell align="center">session id</TableCell>
+                      </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                              {new Date(event.date).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell align="center">{event.os}</TableCell>
+                          <TableCell align="center">{event.browser}</TableCell>
+                          <TableCell align="center">{event.url}</TableCell>
+                          <TableCell align="center">{event.session_id}</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
                 </AccordionDetails>
-            </Accordion>)
+                </Accordion>
+                {loading && <h5>loading ......</h5>}
+              </div>)
               } else {
                 return (
-                  <Accordion expanded={expanded === `panel${i+1}`} onChange={handleChange(`panel${i+1}`)}>
+                <Accordion expanded={expanded === `panel${i+1}`} onChange={handleChange(`panel${i+1}`)}>
                   <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls={`panel${i+1}bh-content`}
                   id={`panel${i+1}bh-header`}
                   >
-                  <Typography className={classes.heading}>{event.name}</Typography>
-                  <Typography className={classes.secondaryHeading}>By User-Id {event.distinct_user_id}</Typography>
+                    <Typography className={classes.heading}>{event.name}</Typography>
+                    <Typography className={classes.secondaryHeading}>By User-Id {event.distinct_user_id}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                      <TableContainer component={Paper}>
-                          <Table className={classes.table} size="small" aria-label="a dense table">
-                              <TableHead>
-                              <TableRow>
-                                  <TableCell align="center">Date</TableCell>
-                                  <TableCell align="center">os</TableCell>
-                                  <TableCell align="center">browser</TableCell>
-                                  <TableCell align="center">url</TableCell>
-                                  <TableCell align="center">session id</TableCell>
-                              </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                  <TableRow>
-                                  <TableCell component="th" scope="row">
-                                      {new Date(event.date).toLocaleDateString()}
-                                  </TableCell>
-                                  <TableCell align="center">{event.os}</TableCell>
-                                  <TableCell align="center">{event.browser}</TableCell>
-                                  <TableCell align="center">{event.url}</TableCell>
-                                  <TableCell align="center">{event.session_id}</TableCell>
-                                  </TableRow>
-                              </TableBody>
-                          </Table>
-                      </TableContainer>
+                    <TableContainer component={Paper}>
+                      <Table className={classes.table} size="small" aria-label="a dense table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell align="center">Date</TableCell>
+                            <TableCell align="center">os</TableCell>
+                            <TableCell align="center">browser</TableCell>
+                            <TableCell align="center">url</TableCell>
+                            <TableCell align="center">session id</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell component="th" scope="row">
+                                {new Date(event.date).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell align="center">{event.os}</TableCell>
+                            <TableCell align="center">{event.browser}</TableCell>
+                            <TableCell align="center">{event.url}</TableCell>
+                            <TableCell align="center">{event.session_id}</TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
                   </AccordionDetails>
-              </Accordion>
-                )
-              }
-          })}
-        </div>
+                </Accordion>
+              )}
+            })}
+          </div>
       </div>
-  : <h1>Loader</h1>
+      : <CircularProgress/>
       }
     </EventLogWrapper>
   );

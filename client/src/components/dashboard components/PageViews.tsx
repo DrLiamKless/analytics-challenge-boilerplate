@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Event } from '../../models/event'
-import { ChartWrapper, DatePickerWrapper, PieChartWrapper } from "components/styled components/cohort.styles";
+import { ChartWrapper, DatePickerWrapper } from "components/styled components/admin.styles";
 import axios from 'axios'
-import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend, Pie ,PieChart, Cell, ResponsiveContainer } from 'recharts'
-import { TextField } from "@material-ui/core";
+import {Tooltip, Legend, Pie ,PieChart, Cell, ResponsiveContainer } from 'recharts'
+import { CircularProgress, TextField } from "@material-ui/core";
+import { monthAgo, monthAgoDate } from "helpers/helpers";
 
-const month = 1000*60*60*24*31
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AAAAAA','#800080'];
 
-const now = Date.now();
-const monthAgo = now - 1000*60*60*24*31
 
 const PageViews: React.FC<{}> = ({}) => {
-    const [allUrlVisits, setAllUrlVisits] = useState<object[]>();
+    const [allUrlVisits, setAllUrlVisits] = useState<{url: string, count: number}[]>();
     const [dayZero, setDayZero] = useState<number>(monthAgo);
 
     useEffect( () => {
@@ -25,7 +22,6 @@ const PageViews: React.FC<{}> = ({}) => {
           url: `http://localhost:3001/events/chart/pageview/${dayZero}`,
         });
         const urlVisits = data;
-        console.log(data);
         setAllUrlVisits(urlVisits);
       };
 
@@ -43,29 +39,31 @@ const PageViews: React.FC<{}> = ({}) => {
  
   return (
     <ChartWrapper>
+      <h3>Page Views</h3>
+      <h5>Counts the amount of views per page</h5>
       { allUrlVisits ?
-      <div>
-        <DatePickerWrapper className="form">
-        <TextField
-          id="dayZero"
-          label="start date"
-          type="date"
-          onChange={(e)=>{onEventChange(e.target.value)}}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        </DatePickerWrapper>
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChartWrapper>
-            <PieChart width={500} height={350}>
+        <div>
+          <DatePickerWrapper className="form">
+          <TextField
+            id="dayZero"
+            label="start date"
+            type="date"
+            defaultValue={monthAgoDate}
+            onChange={(e)=>{onEventChange(e.target.value)}}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          </DatePickerWrapper>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
                 <Pie 
                     data={allUrlVisits}
                     dataKey="count"
                     nameKey="url"
                     cx="50%"
                     cy="50%"
-                    innerRadius={50}
+                    innerRadius={30}
                     fill="#8884d8"
                     label
                 >
@@ -74,12 +72,19 @@ const PageViews: React.FC<{}> = ({}) => {
                 }    
                 </Pie>
                 <Tooltip/>
-                <Legend/>
+                <Legend payload={
+                  allUrlVisits.map(
+                    (visit, index) => ({
+                      id: visit.url,
+                      type: "circle",
+                      value: `${visit.url.split('3000/')[1]}`,
+                      color: `${COLORS[index % COLORS.length]}`,
+                    }))
+                  }/>
             </PieChart>
-          </PieChartWrapper>
-        </ResponsiveContainer>
+          </ResponsiveContainer>
         </div>
-       : <h1>Loader</h1>
+       : <CircularProgress/>
       }
     </ChartWrapper>
   );

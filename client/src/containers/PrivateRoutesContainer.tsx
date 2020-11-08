@@ -41,7 +41,6 @@ const PrivateRoutesContainer: React.FC<Props> = ({
 
   useEffect(() => {
     location.pathname === "/admin" ? setAdmin(true) : setAdmin(false);
-    console.log(location.pathname);
   }, [sendNotifications]);
 
   return (

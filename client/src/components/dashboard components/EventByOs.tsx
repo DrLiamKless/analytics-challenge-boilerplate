@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Event } from '../../models/event'
-import { ChartWrapper, DatePickerWrapper, PieChartWrapper } from "components/styled components/cohort.styles";
+import { ChartWrapper, DatePickerWrapper } from "components/styled components/admin.styles";
 import axios from 'axios'
-import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, Legend, Pie ,PieChart, Cell, ResponsiveContainer } from 'recharts'
-import { TextField } from "@material-ui/core";
+import {Tooltip, Legend, Pie ,PieChart, Cell, ResponsiveContainer } from 'recharts'
+import { TextField, CircularProgress  } from "@material-ui/core";
+import { monthAgo, monthAgoDate } from "helpers/helpers";
 
-const month = 1000*60*60*24*31
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AAAAAA','#800080'];
-
-const now = Date.now();
-const monthAgo = now - 1000*60*60*24*31
 
 const EventsByOs: React.FC<{}> = ({}) => {
     const [allOsCounts, setAllOsCounts] = useState<object[]>();
@@ -25,7 +21,6 @@ const EventsByOs: React.FC<{}> = ({}) => {
           url: `http://localhost:3001/events/chart/os/${dayZero}`,
         });
         const counts = data;
-        console.log("counts",counts);
         setAllOsCounts(counts);
       };
 
@@ -43,6 +38,8 @@ const EventsByOs: React.FC<{}> = ({}) => {
  
   return (
     <ChartWrapper>
+      <h3>OS Calculator</h3>
+      <h5>Counts the different OS uses for each event</h5>
       { allOsCounts ?
       <div>
         <DatePickerWrapper className="form">
@@ -50,15 +47,15 @@ const EventsByOs: React.FC<{}> = ({}) => {
           id="dayZero"
           label="start date"
           type="date"
+          defaultValue={monthAgoDate}
           onChange={(e)=>{onEventChange(e.target.value)}}
           InputLabelProps={{
             shrink: true,
           }}
         />
         </DatePickerWrapper>
-        <ResponsiveContainer width="100%" height="100%">
-        <PieChartWrapper>
-        <PieChart width={500} height={350}>
+        <ResponsiveContainer width="100%" height={300}>
+          <PieChart width={400} height={300}>
             <Pie 
                 data={allOsCounts}
                 dataKey="count"
@@ -69,17 +66,16 @@ const EventsByOs: React.FC<{}> = ({}) => {
                 fill="#8884d8"
                 label
             >
-            {
-            allOsCounts.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
-                }    
+            {allOsCounts.map((entry, index) => 
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
+            }    
             </Pie>
             <Tooltip/>
             <Legend/>
-        </PieChart>
-        </PieChartWrapper>
+          </PieChart>
         </ResponsiveContainer>
-        </div>
-       : <h1>Loader</h1>
+      </div>
+       : <CircularProgress/>
       }
     </ChartWrapper>
   );
